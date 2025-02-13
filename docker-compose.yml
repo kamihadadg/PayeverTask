@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  invoice-service:
+    build:
+      context: ./invoice-service  # مسیر دایرکتوری سرویس فاکتور
+    container_name: invoice-service
+    ports:
+      - "3000:3000"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - MONGODB_URI=mongodb://mongo:27017/invoice_db
+    depends_on:
+      - rabbitmq
+      - mongo
+
+  consumer-service:
+    build:
+      context: ./consumer-service  # مسیر دایرکتوری سرویس مصرف‌کننده
+    container_name: consumer-service
+    ports:
+      - "3001:3001"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"  # Port for RabbitMQ connection
+      - "15672:15672"  # Port for RabbitMQ management UI
+
+  mongo:
+    image: "mongo:latest"
+    container_name: mongo
+    ports:
+      - "27017:27017"  # Port for MongoDB connection
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+    driver: local

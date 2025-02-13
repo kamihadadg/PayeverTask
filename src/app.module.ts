@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { InvoiceModule } from './invoice/invoice.module';
 import { DailySalesReportModule } from './daily-sales-report/daily-sales-report.module'; // وارد کردن ماژول گزارش فروش
+import { EmailSenderService } from './email-sender/email-sender.service';
 import * as dotenv from 'dotenv'; // اصلاح وارد کردن dotenv
 
 // بارگذاری فایل .env
@@ -15,5 +16,6 @@ dotenv.config();
     InvoiceModule,
     DailySalesReportModule,
   ],
+  providers: [EmailSenderService],
 })
 export class AppModule {}
